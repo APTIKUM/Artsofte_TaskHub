@@ -1,3 +1,4 @@
+using Api.Middlewares;
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
 using Dal;
@@ -78,6 +79,25 @@ public sealed class Startup
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskHub API v1");
             });
         }
+
+        app.UseMiddleware<ResponseTimeMiddleware>();
+
+        app.Use(async (context, next) =>
+        {
+            context.Response.OnStarting(() =>
+            {
+                // кириллица не работает , нужно ascii
+                var student = "Cherkasov Vladislav Dimitrievich"; 
+                var group = "RI-240949";
+
+                context.Response.Headers["X-Student-Name"] = student;
+                context.Response.Headers["X-Student-Group"] = group;
+
+                return Task.CompletedTask;
+            });
+
+            await next();
+        });
 
         app.UseRouting();
 
