@@ -1,3 +1,5 @@
+using Api.Infrastructure.DependencyInjectionDemo.Interfaces;
+using Api.Infrastructure.DependencyInjectionDemo.Services;
 using Api.Middlewares;
 using Api.UseCases.Users;
 using Api.UseCases.Users.Interfaces;
@@ -34,6 +36,19 @@ public sealed class Startup
     /// <param name="services">Коллекция сервисов</param>
     public void ConfigureServices(IServiceCollection services)
     {
+
+        // Singleton
+        services.AddSingleton<ISingletonService1, SingletonService1>();
+        services.AddSingleton<ISingletonService2, SingletonService2>();
+
+        // Scoped
+        services.AddScoped<IScopedService1, ScopedService1>();
+        services.AddScoped<IScopedService2, ScopedService2>();
+
+        // Transient
+        services.AddTransient<ITransientService1, TransientService1>();
+        services.AddTransient<ITransientService2, TransientService2>();
+
         services.AddControllers();
         services.AddDal();
         services.AddLogic();
